@@ -1,0 +1,79 @@
+{
+  "pipeline_name": "Mouse Heart Masson Trichrome Fibrosis Pipeline v4",
+  "image_dir": "images",
+  "metadata_csv": "metadata.csv",
+  "manual_mask_dir": "masks_manual",
+  "results_dir": "results",
+  "supported_image_extensions": [
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".tif",
+    ".tiff",
+    ".bmp"
+  ],
+  "pixel_size_um": null,
+  "perivascular_buffer_um": 50.0,
+  "perivascular_buffer_px_if_no_scale": 120,
+  "tissue_mask": {
+    "min_saturation": 18,
+    "max_value": 248,
+    "morphology_kernel_px": 7,
+    "min_object_area_px": 5000
+  },
+  "collagen_hsv_ranges": [
+    {
+      "name": "strong_blue_green_collagen",
+      "hue_low": 50,
+      "hue_high": 155,
+      "saturation_low": 20,
+      "saturation_high": 255,
+      "value_low": 60,
+      "value_high": 255
+    },
+    {
+      "name": "pale_blue_collagen",
+      "hue_low": 90,
+      "hue_high": 175,
+      "saturation_low": 6,
+      "saturation_high": 130,
+      "value_low": 100,
+      "value_high": 250
+    },
+    {
+      "name": "very_pale_blue_collagen",
+      "hue_low": 85,
+      "hue_high": 175,
+      "saturation_low": 3,
+      "saturation_high": 80,
+      "value_low": 125,
+      "value_high": 250
+    }
+  ],
+  "collagen_cleanup": {
+    "morphology_open_kernel_px": 1,
+    "morphology_close_kernel_px": 1,
+    "min_object_area_px": 15
+  },
+  "overlay": {
+    "draw_contours": true,
+    "background_dim_factor": 0.35,
+    "alpha": 0.45
+  },
+  "analysis_rules": {
+    "preferred_denominator": "manual myocardium mask if present, otherwise automatic tissue mask",
+    "vessel_mask_definition": "manual vessel mask should cover vessel lumen plus vessel wall/structure, but not deliberately trace the surrounding collagen ring",
+    "perivascular_zone_definition": "manual vessel mask dilated outward by perivascular_buffer_um when pixel size is known, otherwise perivascular_buffer_px_if_no_scale",
+    "interstitial_zone_definition": "analysis myocardium/tissue mask minus perivascular zones",
+    "biological_replicate": "mouse"
+  },
+  "interactive_preview_max_dim": 1400,
+  "mask_drawing_notes": {
+    "zoom_pan": "The mask drawing tool supports mouse-wheel zoom, plus/minus zoom, right/middle mouse drag panning, and keyboard panning.",
+    "performance": "Only the visible crop is rendered while drawing masks, which is faster for large TIFFs."
+  },
+  "threshold_tuning_notes": {
+    "interactive_preview_max_dim": "Interactive threshold tuning uses a downsampled preview for speed. Written HSV settings are applied to the full-resolution images during final quantification.",
+    "recommended_start": "Use --preview-max-dim 1200 or 1400 for responsiveness; increase only if fine collagen fibres are hard to judge."
+  }
+}
